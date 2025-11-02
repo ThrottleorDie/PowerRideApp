@@ -1,0 +1,78 @@
+workflows:
+  ios-app:
+    name: iOS Workflow
+    max_build_duration: 120
+    instance_type: mac_mini_m1
+    environment:
+      groups:
+        - app_store_credentials # Add your App Store Connect API credentials here
+        - codemagic_certificates # Add your code signing certificates here
+      vars:
+        XCODE_PROJECT: "ThrottleOrDieApp.xcodeproj"  # Update this with your actual Xcode project
+        XCODE_SCHEME: "ThrottleOrDieApp"  # Update this with your actual scheme
+        APP_NAME: "PowerRideApp"  # Main app entry point
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.throttleordie.throttle-or-die-app
+    scripts:
+      - name: Set up Python and Kivy iOS
+        script: |
+          # Install Python 3.11
+          brew install python@3.11
+          python3.11 --version
+          
+          # Install kivy-ios build tool
+          pip3.11 install kivy-ios
+          
+          # Install Python dependencies
+          pip3.11 install kivy matplotlib plyer folium geocoder numpy
+          
+      - name: Build Kivy iOS app
+        script: |
+          # Build the kivy-ios toolchain
+          toolchain build python3 kivy
+          
+          # Create iOS project
+          toolchain create ThrottleOrDieApp .
+          
+          # This creates an Xcode project that you can then build with xcodebuild
+          
+      - name: Build and archive with Xcode
+        script: |
+          # You'll need to update these paths based on where kivy-ios creates the project
+          cd ThrottleOrDieApp-ios
+          
+          xcodebuild clean archive \
+            -archivePath "$(pwd)/../build/ThrottleOrDieApp.xcarchive" \
+            -project "$XCODE_PROJECT" \
+            -scheme "$XCODE_SCHEME" \
+            -configuration Release \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY="iPhone Distribution" \
+            PROVISIONING_PROFILE_SPECIFIER="$APP_STORE_PROFILE_NAME" \
+            DEVELOPMENT_TEAM="$APP_STORE_CONNECT_TEAM_ID" \
+            -destination 'generic/platform=iOS'
+            
+      - name: Export IPA
+        script: |
+          xcodebuild -exportArchive \
+            -archivePath "$(pwd)/build/ThrottleOrDieApp.xcarchive" \
+            -exportOptionsPlist export_options.plist \
+            -exportPath "$(pwd)/build"
+    artifacts:
+      - build/**/*.ipa
+    publishing:
+      email:
+        recipients:
+          - your-email@example.com
+        notify:
+          success: true
+          failure: false
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        beta_groups:
+          - group name 1
+          - group name 2
+        submit_to_app_store: false
+
