@@ -1,0 +1,13 @@
+{
+  "timestamp": "2025-10-12T11:32:24.904874",
+  "vehicle": "dirtbike",
+  "g_force": 0.42000747426636426,
+  "health": {
+    "calories_burned": 270,
+    "hr_zone": "Aero",
+    "recovery_score": 16,
+    "advice": "Hydrate & rest if <70"
+  },
+  "distance_km": 0.036872971777100104,
+  "gpx": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<gpx version=\"1.1\" creator=\"PowerRide AI\">\n<trk><name>PowerRide Route</name><trkseg>\n<trkpt lat=\"37.7749\" lon=\"-122.4194\"><time>2025-10-12T11:32:24.897792</time></trkpt><trkpt lat=\"37.775\" lon=\"-122.419\"><time>2025-10-12T11:32:24.904513</time></trkpt>\n</trkseg></trk></gpx>"
+}
