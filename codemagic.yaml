@@ -5,6 +5,9 @@ workflows:
     max_build_duration: 60
 
     environment:
+      vars:
+        XCODE_WORKSPACE: PowerRideApp.xcworkspace  # Matches Kivy toolchain output
+        XCODE_SCHEME: PowerRideApp                 # Matches Kivy toolchain output
       python: 3.11
 
     scripts:
