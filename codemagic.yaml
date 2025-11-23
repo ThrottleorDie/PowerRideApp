@@ -1,13 +1,13 @@
 workflows:
-  ios-simulator-v2:
+  ios-simulator:
     name: Kivy iOS Simulator Build
     instance_type: mac_mini_m2
     max_build_duration: 60
 
     environment:
       vars:
-        XCODE_WORKSPACE: PowerRideApp.xcworkspace
-        XCODE_SCHEME: PowerRideApp
+        XCODE_WORKSPACE: PowerRideApp.xcodeproj  # Matches Kivy-generated project
+        XCODE_SCHEME: PowerRideApp                # Matches Kivy-generated scheme
 
     scripts:
       - name: Install toolchain & dependencies
